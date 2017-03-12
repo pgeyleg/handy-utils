@@ -1,0 +1,27 @@
+#!/bin/bash
+set -e
+ROOT_PATH="$(dirname "$0")/../.."
+source "$ROOT_PATH/bin/_util"
+
+PROGRAM=`basename $0`
+
+usage() {
+  cat >&2 <<STR
+usage: $PROGRAM <file> 
+
+Generate MD5 checksum <file> and converts it to base64 
+STR
+}
+
+parse_args() {
+  SRC_FILE="$1"
+  if [[ "$#" != 1 ]]; then
+    fatal 'Invalid arguments'
+    usage
+    exit 1
+  fi
+}
+
+parse_args "$@"
+runcmd openssl md5 -binary "$SRC_FILE" | base64
+
